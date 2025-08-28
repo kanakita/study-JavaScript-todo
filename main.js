@@ -35,10 +35,23 @@ function add(todo) {
 
   if (todoText) {
     const li = document.createElement("li");
-    li.innerText = todoText;
-    li.classList.add("list-group-item");
+    const span = document.createElement("span");
+    span.innerText = todoText;
+    li.appendChild(span);
+    li.classList.add("list-group-item","d-flex", "justify-content-between", "align-items-center");
 
     ul.appendChild(li);
+
+    const deleteButton = document.createElement("button");
+    deleteButton.classList.add("btn", "btn-danger");
+    deleteButton.innerText = "削除";
+    li.appendChild(deleteButton);
+
+    deleteButton.addEventListener("click", function(event) {
+      event.preventDefault();
+      li.remove();
+      saveData();
+    });
 
     input.value = "";
     saveData();
@@ -46,8 +59,8 @@ function add(todo) {
 }
 
 function saveData() {
-  //liタグの全ての情報を配列で取得
-  const lists = document.querySelectorAll("li");
+  //li>spanタグの全ての情報を配列で取得
+  const lists = document.querySelectorAll("li span");
 
   // 空の配列を用意
   const todos = [];
