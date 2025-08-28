@@ -13,13 +13,13 @@ form.addEventListener("submit", function(event) {
 
 // ローカルストレージからデータを取り出す
 // JSON.parseすることで文字列形式から元の配列として扱うことができる
-const todos = JSON.parse(localStorage.getItem("todos"));
-// console.log(todos);
+const todos = JSON.parse(localStorage.getItem("todosArray"));
 
-// もしtodosが空でなければ処理を実行
+// もしtodosArrayが空でなければ処理を実行
 if (todos) {
   todos.forEach(todo => {
     add(todo);
+    // console.log(todo);
   });
 }
 
@@ -28,10 +28,16 @@ function add(todo) {
   // 入力内容を取得する
   let todoText = input.value;
 
-  // todoがある場合はtodoTextにテキストを入れる
+  // 完了状況の変数
+  let isCompleted = false;
+
+  // todoがある場合はtodoTextとisCompletedに値を入れる
   if (todo) {
-    todoText = todo;
+    todoText = todo.text;
+    isCompleted = todo.completed;
   }
+
+  // console.log(todoText);
 
   if (todoText) {
     const li = document.createElement("li");
@@ -60,11 +66,17 @@ function add(todo) {
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
     checkbox.name = "complete";
+    checkbox.checked = isCompleted;
+    if (isCompleted) {
+      li.classList.add("bg-info");
+    }
     li.prepend(checkbox);
 
     checkbox.addEventListener("click", function(event) {
       console.log('完了！');
       li.classList.toggle("bg-info");
+      isCompleted = !isCompleted;
+      saveData();
     });
 
     input.value = "";
@@ -73,23 +85,24 @@ function add(todo) {
 }
 
 function saveData() {
-  //li>spanタグの全ての情報を配列で取得
+  //li spanタグの全ての情報を配列で取得
   const lists = document.querySelectorAll("li span");
+  const checkboxes = document.querySelectorAll("input[type='checkbox']");
 
   // 空の配列を用意
   const todos = [];
 
-  // liタグすべての要素に対して処理を行う
-  // lists.forEach(function(list) {
-  //     todos.push(list.innerText);
-  // });
+  lists.forEach((list, index) => {
+      // 空のオブジェクトを用意
+      const todoItem = {};
 
-  // functionではなくアロー関数にする
-  lists.forEach(list => {
-      todos.push(list.innerText);
+      todoItem["text"] = list.innerText;
+      // 対応するcheckboxをindexで取得する
+      todoItem["completed"] = checkboxes[index].checked;
+      todos.push(todoItem);
   });
 
   //データをJSON形式に変換
   // localStorageは文字列形式で保存するため、文字列形式であるJSON形式で保存する必要がある
-  localStorage.setItem("todos", JSON.stringify(todos));
+  localStorage.setItem("todosArray", JSON.stringify(todos));
 }
