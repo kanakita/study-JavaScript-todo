@@ -62,6 +62,11 @@ function add(todo) {
     checkbox.name = "complete";
     li.prepend(checkbox);
 
+    checkbox.addEventListener("click", function(event) {
+      console.log('完了！');
+      li.classList.toggle("bg-info");
+    });
+
     input.value = "";
     saveData();
   }
