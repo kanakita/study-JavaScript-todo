@@ -38,20 +38,29 @@ function add(todo) {
     const span = document.createElement("span");
     span.innerText = todoText;
     li.appendChild(span);
-    li.classList.add("list-group-item","d-flex", "justify-content-between", "align-items-center");
+    li.classList.add("list-group-item","d-flex", "align-items-center", "gap-3");
 
     ul.appendChild(li);
 
+    // 削除ボタンを用意する
     const deleteButton = document.createElement("button");
     deleteButton.classList.add("btn", "btn-danger");
+    deleteButton.setAttribute("style", "margin-left: auto");
     deleteButton.innerText = "削除";
     li.appendChild(deleteButton);
 
+    // 削除ボタンが押された時の処理
     deleteButton.addEventListener("click", function(event) {
       event.preventDefault();
       li.remove();
       saveData();
     });
+
+    // 完了のチェックボックスを用意する
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.name = "complete";
+    li.prepend(checkbox);
 
     input.value = "";
     saveData();
